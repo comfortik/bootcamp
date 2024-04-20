@@ -51,8 +51,24 @@ public class CustomAlert {
             }
         });
     }
-    public  void setOnButtonCloseListener(OnButtonAlertListener onButtonAlertListener){
-        this.onButtonAlertListener=onButtonAlertListener;
+
+    public static void alertDialogCreateRoom(Context context, LayoutInflater layoutInflater){
+        AlertDialog dialog;
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+        AlertNameBinding binding = AlertNameBinding.inflate(layoutInflater, null, false);
+        View view = binding.getRoot();
+        builder1.setCancelable(false);
+        binding.tv.setText("Введите название комнаты");
+        dialog = builder1.setView(view).show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        binding.strelka.setOnClickListener(v -> dialog.cancel());
+        binding.strelkaBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //реализация создания комнаты
+                dialog.cancel();
+            }
+        });
     }
 
 }
