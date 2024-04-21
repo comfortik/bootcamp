@@ -10,4 +10,5 @@ public class RoomRepository {
     public static Call<Room> getRoom(long id) {
         return RoomAPIService.getInstance().getRoom(id);
     }
+
 }
