@@ -115,10 +115,16 @@ public class CustomAlert {
             else {
                 //здесь добавление юзера в  комнату с айди nameRoom и добавление в нее юзера
                 //если успешно-
-                String roomId= binding.et.getText().toString();
+                String roomId = binding.et.getText().toString();
+                //if(roomId==айди комнаты существующей){
 
-                onButtonAlertListener.closeAlert();//закрывает фрагмент
-                dialog.cancel();
+//
+//                onButtonAlertListener.closeAlert();//закрывает фрагмент
+//                dialog.cancel();
+//            }
+//                else{
+                    //обработка ошибки получения айди комнаты
+//                }
             }
 
         });
