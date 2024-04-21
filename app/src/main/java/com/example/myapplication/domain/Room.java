@@ -3,17 +3,17 @@ package com.example.myapplication.domain;
 import java.util.ArrayList;
 
 public class Room {
-    private long id;
+    private String id;
     private ArrayList<Long> userList;
     private ArrayList<Long> productList;
 
-    public Room(long id, ArrayList<Long> userList, ArrayList<Long> productList) {
+    public Room(String id, ArrayList<Long> userList, ArrayList<Long> productList) {
         this.id = id;
         this.userList = userList;
         this.productList = productList;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -25,7 +25,7 @@ public class Room {
         return productList;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
