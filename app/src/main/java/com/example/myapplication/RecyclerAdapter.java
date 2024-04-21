@@ -74,13 +74,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
                 alertDialog.cancel();
             }
         });
-        Window window = alertDialog.getWindow();
-        if (window != null) {
-            WindowManager.LayoutParams layoutParams = window.getAttributes();
-            layoutParams.gravity = Gravity.CENTER_VERTICAL;
-            window.setAttributes(layoutParams);
-        }
-        alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.background_transparent);
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
     public void setFreshness(Product product, Context context){
         float cornerRadius = 20f;
