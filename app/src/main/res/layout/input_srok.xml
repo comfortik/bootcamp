@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_gravity="center_vertical"
     android:layout_margin="12dp"
-    android:background="#F4E9E0">
+    android:background="@drawable/alert_recycler">
     <TextView
         android:paddingTop="20dp"
         android:layout_width="match_parent"

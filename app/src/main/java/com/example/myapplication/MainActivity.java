@@ -8,12 +8,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -21,13 +24,17 @@ import androidx.work.WorkManager;
 import com.example.myapplication.databinding.ActivityMainBinding;
 import com.example.myapplication.databinding.InputSrokBinding;
 import com.example.myapplication.repository.OnALertClose;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.security.Permission;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -39,17 +46,23 @@ public class MainActivity extends AppCompatActivity {
     PhotoFragment photoFragment;
     FragmentManager manager;
     BlankFragment fragment;
+    FirebaseAuth mAuth;
+
+    RecyclerAdapter adapter;
+    FirebaseFirestore fb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        View customLoadingView = getLayoutInflater().inflate(R.layout.splash_screen, null);
+        setContentView(customLoadingView);
         //здесь добавление/получение юзера и  проверка на то есть ли юзер в комнате
         //если нет, то
          manager = getSupportFragmentManager();
          CustomAlert customAlert = new CustomAlert();
-
+         fb = FirebaseFirestore.getInstance();
+         mAuth = FirebaseAuth.getInstance();
          fragment= new BlankFragment();
          customAlert.setOnCloseFragment(new OnButtonAlertListener() {
              @Override
@@ -76,8 +89,10 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         viewModel.getProductList().observe(this, productList -> {
+            setContentView(binding.getRoot());
             if (productList != null && !productList.isEmpty()) {
                 setupRecyclerView(productList);
+
             }
         });
         binding.all.setOnClickListener(v -> viewModel.getProductList().observe(MainActivity.this, productList -> {
@@ -134,7 +149,49 @@ public class MainActivity extends AppCompatActivity {
                     binding.btnInput.setVisibility(View.GONE);
                     CustomAlert.alertDialogDate(MainActivity.this, getLayoutInflater());
                 });
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(0,ItemTouchHelper.START);
+            }
 
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                String id = productList.get(position).getId();
+                FirestoreGetId firestoreGetId = new FirestoreGetId(fb);
+
+                firestoreGetId.getId(mAuth.getCurrentUser().getUid(), userId -> {
+                    fb.collection("Users")
+                            .document(userId)
+                            .collection("Products")
+                            .whereEqualTo("id", productList.get(position).getId())
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        document.getReference().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                adapter.deleteItem(position);
+                                            }
+                                        });
+
+                                    }
+
+                                }
+                            });
+                });
+
+
+            }
+        });
+        helper.attachToRecyclerView(binding.recycler);
 
 
 
@@ -143,8 +200,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupRecyclerView(List<Product> productList) {
-        RecyclerAdapter adapter = new RecyclerAdapter(this);
+        adapter = new RecyclerAdapter(this);
         adapter.setItems(productList);
+        this.productList = productList;
         adapter.setItemClickListener(diaryEntry -> adapter.openFragment(this, diaryEntry, getLayoutInflater()));
         binding.recycler.setAdapter(adapter);
         binding.recycler.setClipToPadding(false);

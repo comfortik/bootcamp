@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="30dp"
-    android:background="#F4E9E0">
+    android:background="@drawable/alert_recycler">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
