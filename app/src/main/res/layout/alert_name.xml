@@ -13,11 +13,13 @@
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/et"
         android:layout_marginBottom="16dp"
-        android:text="Введите название продукта"/>
+        android:text="Введите название продукта"
+        android:textColor="@color/black"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et"
+        android:textColor="@color/black"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:inputType="text"

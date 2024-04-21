@@ -65,6 +65,9 @@ public class MainViewModel extends ViewModel {
 
 
     }
+    public void addProduct(){
+        fetchData();
+    }
     private void getProducts() {
         firestoreGetId.getId(mAuth.getCurrentUser().getUid(), userId -> {
             fb.collection("Users")

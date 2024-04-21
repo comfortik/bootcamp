@@ -20,6 +20,8 @@ import androidx.work.WorkManager;
 
 import com.example.myapplication.databinding.ActivityMainBinding;
 import com.example.myapplication.databinding.InputSrokBinding;
+import com.example.myapplication.repository.OnALertClose;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.security.Permission;
 import java.time.LocalDate;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     PhotoFragment photoFragment;
     FragmentManager manager;
     BlankFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +60,12 @@ public class MainActivity extends AppCompatActivity {
                  binding.all.setText("asdasd");
              }
          });
-
+        customAlert.setOnALertClose(new OnALertClose() {
+            @Override
+            public void closeAlert() {
+                viewModel.addProduct();
+            }
+        });
 
          photoFragment = new PhotoFragment();
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -146,11 +154,11 @@ public class MainActivity extends AppCompatActivity {
         return LocalDate.parse(dateStr, formatter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        manager.beginTransaction().replace(R.id.frame,fragment).commit();
-        binding.mainlayout.setVisibility(View.GONE);
-        binding.frame.setVisibility(View.VISIBLE);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        manager.beginTransaction().replace(R.id.frame,fragment).commit();
+//        binding.mainlayout.setVisibility(View.GONE);
+//        binding.frame.setVisibility(View.VISIBLE);
+//    }
 }

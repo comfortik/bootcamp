@@ -11,6 +11,12 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.myapplication.databinding.AlertNameBinding;
 import com.example.myapplication.databinding.InputSrokBinding;
+import com.example.myapplication.repository.OnALertClose;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -20,6 +26,7 @@ import java.util.Locale;
 public class CustomAlert {
 
     static OnButtonAlertListener onButtonAlertListener;
+    static OnALertClose onALertClose;
     public CustomAlert() {
     }
     public static void alertDialogDate(Context context, LayoutInflater layoutInflater){
@@ -50,6 +57,8 @@ public class CustomAlert {
         });
     }
     public static void alertDialogName(Context context, LayoutInflater layoutInflater, String srok){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         AlertDialog dialog;
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         AlertNameBinding binding = AlertNameBinding.inflate(layoutInflater, null, false);
@@ -63,7 +72,23 @@ public class CustomAlert {
             }
             else {
                 Product product = new Product(binding.et.getText().toString(), srok);//добавить продукт в бд, обновить recycler
-                dialog.cancel();
+                FirestoreGetId firestoreGetId= new FirestoreGetId(fb);
+                firestoreGetId.getId(mAuth.getCurrentUser().getUid(), userId -> {
+                    fb.collection("Users")
+                            .document(userId)
+                            .collection("Products")
+                            .add(product)
+                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                    if(task.isSuccessful()){
+                                        onALertClose.closeAlert();
+                                        dialog.cancel();
+                                    }
+                                }
+                            });
+                });
+
             }
 
         } );
@@ -134,4 +159,7 @@ public class CustomAlert {
         this.onButtonAlertListener=onButtonAlertListener;
     }
 
+    public void setOnALertClose(OnALertClose onALertClose) {
+        this.onALertClose = onALertClose;
+    }
 }

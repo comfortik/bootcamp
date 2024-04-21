@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@id/et"
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center_horizontal">
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/strelka"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
             android:background="@drawable/strelka" />
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/strelka_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
