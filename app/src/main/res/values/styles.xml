@@ -8,7 +8,10 @@
         <item name="backgroundColor">@color/white</item>
         <item name="cornerRadius">20dp</item>
     </style>
-
+    <style name="alertRecycler">
+        <item name="backgroundColor">#F4E9E0</item>
+        <item name="cornerRadius">20dp</item>
+    </style>
     <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
         <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
         <item name="android:colorAccent">@color/ruined</item>
