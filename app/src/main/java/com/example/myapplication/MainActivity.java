@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                  manager.beginTransaction().remove(fragment).commit();
                  binding.mainlayout.setVisibility(View.VISIBLE);
                  binding.frame.setVisibility(View.GONE);
+                 binding.all.setText("asdasd");
              }
          });
 

@@ -6,9 +6,12 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -71,6 +74,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
                 alertDialog.cancel();
             }
         });
+        Window window = alertDialog.getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams layoutParams = window.getAttributes();
+            layoutParams.gravity = Gravity.CENTER_VERTICAL;
+            window.setAttributes(layoutParams);
+        }
+        alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.background_transparent);
     }
     public void setFreshness(Product product, Context context){
         float cornerRadius = 20f;

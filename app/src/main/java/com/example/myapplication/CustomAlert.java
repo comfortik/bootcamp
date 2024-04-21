@@ -115,6 +115,8 @@ public class CustomAlert {
             else {
                 //здесь добавление юзера в  комнату с айди nameRoom и добавление в нее юзера
                 //если успешно-
+                String roomId= binding.et.getText().toString();
+
                 onButtonAlertListener.closeAlert();//закрывает фрагмент
                 dialog.cancel();
             }
